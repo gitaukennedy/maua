@@ -12,6 +12,7 @@ import os
 import sys
 import math
 import time
+import shutil
 import subprocess
 import multiprocessing as mp
 import numpy as np
@@ -1171,12 +1172,39 @@ def render_preview_keyframes(out_dir):
         print(f"Rendered {out_path} in {time.time() - t0:.2f}s")
 
 
+def resolve_ffmpeg_executable():
+    env_override = os.environ.get("FFMPEG_PATH")
+    if env_override:
+        env_override = os.path.expandvars(os.path.expanduser(env_override))
+        if os.path.isfile(env_override):
+            return env_override
+
+    resolved = shutil.which("ffmpeg") or shutil.which("ffmpeg.exe")
+    if resolved:
+        return resolved
+
+    windows_candidates = [
+        r"C:\Program Files\ffmpeg\bin\ffmpeg.exe",
+        r"C:\Program Files\Git\usr\bin\ffmpeg.exe",
+        r"C:\ffmpeg\bin\ffmpeg.exe",
+    ]
+    for candidate in windows_candidates:
+        if os.path.isfile(candidate):
+            return candidate
+
+    raise FileNotFoundError(
+        "FFmpeg was not found. Install FFmpeg and ensure it is on PATH, or set FFMPEG_PATH to the ffmpeg.exe file. "
+        "On Windows, a common install is: winget install --id Gyan.FFmpeg --source winget"
+    )
+
+
 def render_full_video(output_mp4):
     print(f"Rendering {TOTAL_FRAMES} frames at {WIDTH}x{HEIGHT} ({FPS} fps)...")
     t_start = time.time()
+    ffmpeg_exe = resolve_ffmpeg_executable()
 
     ffmpeg_cmd = [
-        "ffmpeg", "-y",
+        ffmpeg_exe, "-y",
         "-f", "rawvideo",
         "-vcodec", "rawvideo",
         "-s", f"{WIDTH}x{HEIGHT}",
