@@ -1,52 +1,65 @@
-# 🌸 3D Botanical Lily Animation with Python
+# 🌸 3D Botanical Lily Animation
 
-A procedural 3D botanical animation of a bouquet of Oriental lilies, created with Python. The animation is designed in a vertical 9:16 format for Instagram Reels.
+A procedural 3D animation of an Oriental lily bouquet, rendered in Python as a vertical 9:16 video. The animation is 1080 × 1920 pixels, 30 frames per second, and 13 seconds long.
 
-## ✨ Features
+## Features
 
-- 🌸 Procedurally constructed 3D lily flowers
-- 🌿 Detailed petals, stems, leaves, stamens, and pistils
-- 🎬 Animated flower construction and reveal
-- 📱 Vertical 1080 × 1920 video format
-- 🐍 Python-based animation generation
+- Procedurally modeled petals, stems, leaves, stamens, and pistils
+- Animated construction and flower reveal
+- MP4 output encoded with FFmpeg
+- Optional preview keyframes
 
-## 🛠️ Technologies
+## Requirements
 
-- Python
-- NumPy
-- OpenCV
-- Additional Python libraries used by the script
+- Windows with Python installed and available as `python`
+- NumPy and OpenCV for Python
+- FFmpeg for MP4 encoding
 
-## 📁 Project Structure
+## Setup in Git Bash
 
-```text
-lily-animation-python/
-└── generate_lily_animation.py
-```
-
-## 🚀 Getting Started
-
-1. Download or clone this repository.
-2. Install the Python dependencies required by the script.
-3. Run the script:
+From the project directory, create and activate a virtual environment, then install the Python packages:
 
 ```bash
-python3 generate_lily_animation.py
+python --version
+python -m venv .venv
+source .venv/Scripts/activate
+python -m pip install --upgrade pip
+python -m pip install numpy opencv-python
 ```
 
-**Note:** Check the imports at the top of the script and install any required dependencies before running it. The script may also require additional system tools.
+Install FFmpeg from Git Bash using Winget if it is not installed already:
 
-## 🎥 Output
+```bash
+winget install --id Gyan.FFmpeg --source winget --accept-source-agreements --accept-package-agreements
+```
 
-The script generates a vertical animated lily video suitable for showcasing in short-form content.
+Winget installs FFmpeg under the user's local WinGet package directory. The script searches that directory automatically, so a restarted shell or a manually edited `PATH` is not required. To override the detected executable, set `FFMPEG_PATH` to its full Windows path before running the script.
 
-## 💗 About
+## Run
 
-Created as a Python animation project exploring procedural botanical modeling and cinematic visual storytelling.
+Render the complete animation:
 
-If you found this project through my coding reels, feel free to explore the source code!
+```bash
+python generate_lily_animation.py
+```
 
----
+The video is written to `lily_3d_botanical_animation.mp4` in the project directory. Rendering all 390 frames may take several minutes.
 
-⭐ If you like this project, consider starring the repository.
-# maua
+Render four preview images instead:
+
+```bash
+python generate_lily_animation.py --preview
+```
+
+Preview PNG files are written to the project directory.
+
+## Dependencies
+
+Python packages:
+
+```text
+numpy
+opencv-python
+```
+
+FFmpeg is a separate system executable and is not installed by `pip`.

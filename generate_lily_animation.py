@@ -12,6 +12,7 @@ import os
 import sys
 import math
 import time
+import glob
 import shutil
 import subprocess
 import multiprocessing as mp
@@ -1191,6 +1192,15 @@ def resolve_ffmpeg_executable():
     for candidate in windows_candidates:
         if os.path.isfile(candidate):
             return candidate
+
+    local_app_data = os.environ.get("LOCALAPPDATA")
+    if local_app_data:
+        winget_pattern = os.path.join(
+            local_app_data, "Microsoft", "WinGet", "Packages", "**", "bin", "ffmpeg.exe"
+        )
+        winget_matches = glob.glob(winget_pattern, recursive=True)
+        if winget_matches:
+            return winget_matches[0]
 
     raise FileNotFoundError(
         "FFmpeg was not found. Install FFmpeg and ensure it is on PATH, or set FFMPEG_PATH to the ffmpeg.exe file. "
